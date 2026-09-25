@@ -22,12 +22,25 @@ export type DemoRegistration = {
   status: 'PENDING' | 'CONFIRMED' | 'WAITLISTED' | 'CANCELLED';
   passCode: string;
   createdAt: string;
-  paymentStatus: 'PAID' | 'PENDING';
+  paymentStatus: 'PAID' | 'PENDING' | 'FREE';
+  transactionId?: string | null;
+  amount?: number;
+};
+
+export type DemoTransaction = {
+  transactionId: string;
+  registrationId: string;
+  eventId: string;
+  eventName: string;
+  amount: number;
+  status: 'paid';
+  createdAt: string;
 };
 
 const USER_KEY = 'lakshyaos_demo_user';
 const TOKEN_KEY = 'lakshyaos_demo_token';
 const REG_KEY = 'lakshyaos_demo_registrations';
+const TRANSACTION_KEY = 'lakshyaos_demo_transactions';
 
 const browser = () => typeof window !== 'undefined';
 
@@ -80,6 +93,17 @@ export function updateDemoUser(patch: Partial<DemoUser>): DemoUser | null {
 
 export function getDemoRegistrations(): DemoRegistration[] {
   return readJson<DemoRegistration[]>(REG_KEY, []);
+}
+
+export function getDemoTransactions(): DemoTransaction[] {
+  return readJson<DemoTransaction[]>(TRANSACTION_KEY, []);
+}
+
+export function addDemoTransaction(transaction: DemoTransaction): DemoTransaction[] {
+  const current = getDemoTransactions();
+  const next = [transaction, ...current];
+  writeJson(TRANSACTION_KEY, next);
+  return next;
 }
 
 export function addDemoRegistration(registration: DemoRegistration): DemoRegistration[] {

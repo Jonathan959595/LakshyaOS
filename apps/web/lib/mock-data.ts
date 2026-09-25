@@ -10,6 +10,7 @@ export type DemoEvent = {
   endsAt: string | null;
   venue: string;
   feeInPaise: number;
+  price?: number;
   capacity: number | null;
   isFlagship: boolean;
   shortDescription: string;
@@ -29,6 +30,39 @@ export const departments = [
   { id: 'arts', name: 'Arts & Media', slug: 'arts-media' },
   { id: 'sports', name: 'Sports', slug: 'sports' },
   { id: 'general', name: 'General', slug: 'general' },
+];
+
+const additionalEvents: DemoEvent[] = [
+  {
+    id: 'evt-121', slug: 'design-dash', title: 'Design Dash', description: 'Sketch, prototype, and present an original answer to a real campus challenge.', rules: 'Teams of 2-3\nBring your own laptop\nFinal presentation: 5 minutes', category: 'OTHER', status: 'PUBLISHED', startsAt: '2026-10-15T13:00:00.000Z', endsAt: '2026-10-15T16:00:00.000Z', venue: 'Creative Studio', feeInPaise: 0, capacity: 50, isFlagship: false, shortDescription: 'A fast creative sprint from first sketch to final pitch.', registrationStartsAt: '2026-09-20T00:00:00.000Z', registrationEndsAt: '2026-10-12T23:59:59.000Z', imageUrl: null, theme: 'Design', department: { name: 'Arts & Media', slug: 'arts-media' },
+  },
+  {
+    id: 'evt-122', slug: 'circuit-crafters', title: 'Circuit Crafters', description: 'Build a working circuit and solve a hands-on electronics challenge with your team.', rules: 'Teams of 2\nComponents provided\nSafety briefing required', category: 'TECHNICAL', status: 'PUBLISHED', startsAt: '2026-10-16T09:30:00.000Z', endsAt: '2026-10-16T12:30:00.000Z', venue: 'Electronics Lab 1', feeInPaise: 0, capacity: 48, isFlagship: false, shortDescription: 'Hands-on circuits, clever fixes, and a race to make it work.', registrationStartsAt: '2026-09-20T00:00:00.000Z', registrationEndsAt: '2026-10-13T23:59:59.000Z', imageUrl: null, theme: 'Electronics', department: { name: 'Electronics', slug: 'electronics' },
+  },
+  {
+    id: 'evt-123', slug: 'theatre-in-the-round', title: 'Theatre in the Round', description: 'Student actors bring original scenes and familiar stories to an intimate open-air stage.', rules: 'Acts up to 12 minutes\nProps must be self-managed\nArrive for sound check', category: 'CULTURAL', status: 'PUBLISHED', startsAt: '2026-10-17T18:00:00.000Z', endsAt: '2026-10-17T21:00:00.000Z', venue: 'Garden Amphitheatre', feeInPaise: 0, capacity: 110, isFlagship: false, shortDescription: 'Original scenes and bright performances under the evening sky.', registrationStartsAt: '2026-09-21T00:00:00.000Z', registrationEndsAt: '2026-10-14T23:59:59.000Z', imageUrl: null, theme: 'Theatre', department: { name: 'Arts & Media', slug: 'arts-media' },
+  },
+  {
+    id: 'evt-124', slug: 'basketball-3x3', title: 'Basketball 3x3', description: 'Fast half-court games, quick substitutions, and a campus bracket that comes down to the final shot.', rules: 'Teams of 3 plus one substitute\nStandard campus rules apply\nCheck in 20 minutes before play', category: 'SPORTS', status: 'PUBLISHED', startsAt: '2026-10-18T08:00:00.000Z', endsAt: '2026-10-18T14:00:00.000Z', venue: 'Outdoor Courts', feeInPaise: 0, capacity: 64, isFlagship: false, shortDescription: 'Three on three. One court. Bragging rights on the line.', registrationStartsAt: '2026-09-21T00:00:00.000Z', registrationEndsAt: '2026-10-15T23:59:59.000Z', imageUrl: null, theme: 'Basketball', department: { name: 'Sports', slug: 'sports' },
+  },
+  {
+    id: 'evt-125', slug: 'market-makers', title: 'Market Makers', description: 'A lively pop-up marketplace where student teams test a product idea with real festival-goers.', rules: 'Teams of 2-5\nBring a low-waste product or concept\nSetup begins at 8:00 AM', category: 'MANAGEMENT', status: 'PUBLISHED', startsAt: '2026-10-19T10:00:00.000Z', endsAt: '2026-10-19T16:00:00.000Z', venue: 'Festival Walkway', feeInPaise: 0, capacity: 45, isFlagship: false, shortDescription: 'Put your idea out there and meet your first customers.', registrationStartsAt: '2026-09-22T00:00:00.000Z', registrationEndsAt: '2026-10-16T23:59:59.000Z', imageUrl: null, theme: 'Entrepreneurship', department: { name: 'Management', slug: 'management' },
+  },
+  {
+    id: 'evt-126', slug: 'short-film-showcase', title: 'Short Film Showcase', description: 'Screen original short films and meet the student creators behind each story.', rules: 'Films up to 12 minutes\nSubmit MP4 in advance\nInclude credits and music permissions', category: 'CULTURAL', status: 'PUBLISHED', startsAt: '2026-10-20T18:30:00.000Z', endsAt: '2026-10-20T21:30:00.000Z', venue: 'Media Theatre', feeInPaise: 0, capacity: 95, isFlagship: false, shortDescription: 'Big-screen stories, made right here on campus.', registrationStartsAt: '2026-09-23T00:00:00.000Z', registrationEndsAt: '2026-10-17T23:59:59.000Z', imageUrl: null, theme: 'Film', department: { name: 'Arts & Media', slug: 'arts-media' },
+  },
+  {
+    id: 'evt-127', slug: 'green-campus-build', title: 'Green Campus Build', description: 'Teams design a practical, measurable idea for a greener and more welcoming campus.', rules: 'Interdisciplinary teams encouraged\nIdeas should be implementable\nBring a one-page concept', category: 'OTHER', status: 'PUBLISHED', startsAt: '2026-10-22T10:00:00.000Z', endsAt: '2026-10-22T13:00:00.000Z', venue: 'Civil Design Lab', feeInPaise: 0, capacity: 60, isFlagship: false, shortDescription: 'Make one small campus change with a big ripple effect.', registrationStartsAt: '2026-09-24T00:00:00.000Z', registrationEndsAt: '2026-10-19T23:59:59.000Z', imageUrl: null, theme: 'Sustainability', department: { name: 'Civil', slug: 'civil' },
+  },
+  {
+    id: 'evt-128', slug: 'open-mic-under-stars', title: 'Open Mic Under the Stars', description: 'Bring a poem, a song, a story, or just your best cheer for a welcoming open-mic night.', rules: 'Five minutes per performer\nSign up on arrival\nAll-ages, original work welcome', category: 'CULTURAL', status: 'PUBLISHED', startsAt: '2026-10-24T19:00:00.000Z', endsAt: '2026-10-24T22:00:00.000Z', venue: 'Library Lawn', feeInPaise: 0, capacity: 120, isFlagship: false, shortDescription: 'A microphone, an open sky, and a spot for your voice.', registrationStartsAt: '2026-09-24T00:00:00.000Z', registrationEndsAt: '2026-10-21T23:59:59.000Z', imageUrl: null, theme: 'Open Mic', department: { name: 'Arts & Media', slug: 'arts-media' },
+  },
+  {
+    id: 'evt-129', slug: 'precision-pitstop', title: 'Precision Pitstop', description: 'A mechanical design and assembly challenge where speed matters only when the build is right.', rules: 'Teams of 3\nTools and parts provided\nSafety gear must be worn', category: 'TECHNICAL', status: 'PUBLISHED', startsAt: '2026-10-26T09:00:00.000Z', endsAt: '2026-10-26T12:00:00.000Z', venue: 'Mechanical Workshop', feeInPaise: 0, capacity: 40, isFlagship: false, shortDescription: 'Design, assemble, and test your way to a clean finish.', registrationStartsAt: '2026-09-25T00:00:00.000Z', registrationEndsAt: '2026-10-22T23:59:59.000Z', imageUrl: null, theme: 'Engineering', department: { name: 'Mechanical', slug: 'mechanical' },
+  },
+  {
+    id: 'evt-130', slug: 'final-whistle-cup', title: 'Final Whistle Cup', description: 'A friendly multi-sport finale that brings campus teams together for one last festival showdown.', rules: 'Team entries welcome\nEvents announced at opening\nBring campus ID and sportswear', category: 'SPORTS', status: 'PUBLISHED', startsAt: '2026-10-30T13:00:00.000Z', endsAt: '2026-10-30T17:00:00.000Z', venue: 'Central Sports Ground', feeInPaise: 0, capacity: 150, isFlagship: false, shortDescription: 'One last team challenge before the festival curtain falls.', registrationStartsAt: '2026-09-25T00:00:00.000Z', registrationEndsAt: '2026-10-27T23:59:59.000Z', imageUrl: null, theme: 'Campus Cup', department: { name: 'Sports', slug: 'sports' },
+  },
 ];
 
 export const eventCategories = ['TECHNICAL', 'CULTURAL', 'SPORTS', 'MANAGEMENT', 'OTHER'] as const;
@@ -455,6 +489,24 @@ export const demoEvents: DemoEvent[] = [
     department: { name: 'Arts & Media', slug: 'arts-media' },
   },
 ];
+
+demoEvents.push(...additionalEvents);
+
+const eventPrices = [
+  0, 149, 99, 199, 0, 49, 149, 99, 0, 249,
+  49, 0, 99, 149, 0, 199, 0, 149, 49, 0,
+  99, 49, 0, 149, 199, 99, 49, 0, 249, 0,
+];
+
+demoEvents.forEach((event, index) => {
+  const price = eventPrices[index] ?? 0;
+  event.price = price;
+  event.feeInPaise = price * 100;
+});
+
+export function getEventPrice(event: Pick<DemoEvent, 'price' | 'feeInPaise'>): number {
+  return event.price ?? event.feeInPaise / 100;
+}
 
 export const demoAnnouncements = [
   'Registration is open for flagship events and curated campus showcases.',

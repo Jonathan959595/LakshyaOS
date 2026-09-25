@@ -1,4 +1,4 @@
-import { demoAnnouncements, demoEvents, demoGallery, demoSponsors } from './mock-data';
+import { demoAnnouncements, demoEvents, demoGallery, demoSponsors, getEventPrice } from './mock-data';
 import {
   addDemoRegistration,
   createDemoToken,
@@ -111,6 +111,7 @@ export async function mockApiRequest<T>(path: string, init?: RequestInit, token?
     const body = parseBody<{ eventSlug?: string }>(init?.body);
     const event = demoEvents.find((item) => item.slug === body?.eventSlug);
     if (!event) throw new Error('Event not found');
+    if (getEventPrice(event) > 0) throw new Error('Paid events must be completed through demo checkout.');
     if (getDemoRegistrations().some((item) => item.eventId === event.id)) {
       throw new Error('You are already registered for this event');
     }
@@ -126,7 +127,9 @@ export async function mockApiRequest<T>(path: string, init?: RequestInit, token?
       status: 'CONFIRMED' as const,
       passCode: `PASS-${Math.random().toString(36).slice(2, 10).toUpperCase()}`,
       createdAt: new Date().toISOString(),
-      paymentStatus: event.feeInPaise > 0 ? 'PENDING' : 'PAID',
+      paymentStatus: 'FREE',
+      transactionId: null,
+      amount: 0,
     };
 
     addDemoRegistration(registration);
