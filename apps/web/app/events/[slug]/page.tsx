@@ -1,7 +1,12 @@
+'use client';
+
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 import { api } from '../../../lib/api';
+import { getDemoSessionToken, hasRegisteredEvent } from '../../../lib/demo-store';
 
 type Event = {
+  id: string;
   slug: string;
   title: string;
   description: string;
@@ -13,25 +18,57 @@ type Event = {
   capacity?: number | null;
   registrationStartsAt?: string | null;
   registrationEndsAt?: string | null;
-  department?: { name: string } | null;
+  department?: { name: string; slug: string } | null;
   rules?: string | null;
 };
 
-export default async function EventPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
-  let event: Event | undefined;
+export default function EventPage({ params }: { params: Promise<{ slug: string }> }) {
+  const [event, setEvent] = useState<Event | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [registered, setRegistered] = useState(false);
 
-  try {
-    event = await api<Event>(`/events/${slug}`, { cache: 'no-store' });
-  } catch {
-    event = undefined;
+  useEffect(() => {
+    async function load() {
+      const { slug } = await params;
+      try {
+        const result = await api<Event>(`/events/${slug}`, { cache: 'no-store' });
+        setEvent(result);
+        setRegistered(hasRegisteredEvent(result.id));
+      } catch {
+        setError('Event not found.');
+      } finally {
+        setLoading(false);
+      }
+    }
+    void load();
+  }, [params]);
+
+  async function register() {
+    const token = getDemoSessionToken();
+    if (!token) {
+      window.location.href = '/login';
+      return;
+    }
+
+    if (!event) return;
+
+    try {
+      const result = await api<{ id: string; status: string; passCode: string }>(
+        '/registrations/register',
+        { method: 'POST', body: JSON.stringify({ eventSlug: event.slug }) },
+        token,
+      );
+      setRegistered(true);
+      alert(`Registration successful! ID: ${result.id}\nPass: ${result.passCode}`);
+      window.location.href = '/registrations';
+    } catch (e) {
+      alert(e instanceof Error ? e.message : 'Unable to register for this event');
+    }
   }
 
-  if (!event) {
-    return <main className="p-8 text-xl font-semibold">Event not found.</main>;
-  }
-
-  const registerDisabled = false;
+  if (loading) return <main className="p-8">Loading event…</main>;
+  if (!event) return <main className="p-8 text-xl font-semibold">{error || 'Event not found.'}</main>;
 
   return (
     <main className="mx-auto max-w-5xl px-6 py-10 md:px-10">
@@ -43,11 +80,11 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
         </div>
       </nav>
 
-      <div className="overflow-hidden rounded-[32px] border border-[#1f1730]/10 bg-white shadow-sm">
+      <div className="overflow-hidden rounded-4xl border border-[#1f1730]/10 bg-white shadow-sm">
         <div className="h-40 bg-[linear-gradient(135deg,#ff5b47,#7046db)]" />
         <div className="p-6 md:p-8">
           <p className="text-sm font-bold uppercase tracking-[0.2em] text-[#7046db]">{event.category}</p>
-          <h1 className="mt-3 text-4xl font-black tracking-[-0.05em] md:text-6xl">{event.title}</h1>
+          <h1 className="mt-3 text-4xl font-black tracking-tighter md:text-6xl">{event.title}</h1>
 
           <div className="mt-6 flex flex-wrap gap-3 text-sm">
             <span className="rounded-full bg-[#f4ecff] px-3 py-1.5 font-semibold text-[#4a2c9b]">{event.department?.name ?? 'Open to all'}</span>
@@ -75,11 +112,9 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
                 <p className="mt-3"><span className="font-semibold text-[#1f1730]">Registration window:</span> {event.registrationStartsAt ? new Date(event.registrationStartsAt).toLocaleDateString() : 'Open now'} - {event.registrationEndsAt ? new Date(event.registrationEndsAt).toLocaleDateString() : 'TBA'}</p>
               </div>
 
-              <form action={`/api/registrations/register?eventSlug=${event.slug}`} method="post" className="mt-5">
-                <button type="submit" disabled={registerDisabled} className="w-full rounded-full bg-[#ff5b47] px-5 py-3 font-bold text-white disabled:cursor-not-allowed disabled:opacity-60">
-                  Register for event
-                </button>
-              </form>
+              <button type="button" onClick={register} disabled={registered} className="mt-5 w-full rounded-full bg-[#ff5b47] px-5 py-3 font-bold text-white disabled:cursor-not-allowed disabled:opacity-60">
+                {registered ? 'Registered' : 'Register for event'}
+              </button>
             </aside>
           </div>
         </div>
