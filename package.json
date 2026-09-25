@@ -1,0 +1,17 @@
+{
+  "name": "lakshyaos",
+  "version": "0.1.0",
+  "private": true,
+  "description": "LakshyaOS festival platform monorepo",
+  "workspaces": ["apps/*", "packages/*"],
+  "scripts": {
+    "dev:web": "npm run dev --workspace=@lakshyaos/web",
+    "dev:api": "npm run start:dev --workspace=@lakshyaos/api",
+    "build": "npm run build --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "db:generate": "npm run prisma:generate --workspace=@lakshyaos/api",
+    "db:migrate": "npm run prisma:migrate --workspace=@lakshyaos/api"
+  },
+  "engines": { "node": ">=22.0.0", "npm": ">=10.0.0" }
+}
